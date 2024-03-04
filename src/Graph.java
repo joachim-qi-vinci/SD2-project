@@ -43,7 +43,7 @@ public class Graph {
   }
 
   protected  void ajouterSommet(City a){
-    return;
+    correspondanceIdCity.put(String.valueOf(a.getId()), a);
   }
 
   protected void ajouterArc(Road f){

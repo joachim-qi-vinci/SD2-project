@@ -20,7 +20,7 @@ public class ListeDAdjacence extends Graph {
   }
 
   @Override
-  protected void ajouterArc(Road r){
+  protected void ajouterRoute(Road r){
     outputRoads.get(r.getSource()).add(r);
   }
 

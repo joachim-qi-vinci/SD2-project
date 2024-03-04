@@ -33,9 +33,9 @@ public class Graph {
         // convert String latitude to double
         double latitude = Double.parseDouble(arrOfString[3]);
         City city = new City(id, cityName, longitude, latitude);
-        Set<Road> set = new HashSet();
+        Set<Road> set = new HashSet<>();
         sourceDestRoads.put(city, set);
-        correspondanceIdCity.put(arrOfString[0], city);
+        ajouterSommet(city);
       }
       scanner.close();
     } catch (FileNotFoundException e) {
@@ -51,22 +51,22 @@ public class Graph {
         City dest = correspondanceIdCity.get(destinationCityId);
         double dist = Util.distance(source.getLatitude(), source.getLongitude(), dest.getLatitude(), dest.getLongitude());
         Road road = new Road(source, dest, dist);
-        Set<Road> srcSet = sourceDestRoads.get(source);
-        Set<Road> destSet = sourceDestRoads.get(dest);
-        srcSet.add(road);
-        destSet.add(road);
+        ajouterRoute(road);
       }
     } catch ( FileNotFoundException e) {
       throw new RuntimeException(e);
     }
   }
 
-  protected void ajouterSommet(City a) {
-    correspondanceIdCity.put(String.valueOf(a.getId()), a);
+  protected void ajouterSommet(City c) {
+    correspondanceIdCity.put(String.valueOf(c.getId()), c);
   }
 
-  protected void ajouterArc(Road f) {
-    return;
+  protected void ajouterRoute(Road r) {
+    Set<Road> srcSet = sourceDestRoads.get(r.getSource());
+    Set<Road> destSet = sourceDestRoads.get(r.getDestination());
+    srcSet.add(r);
+    destSet.add(r);
   }
 
   public Set<Road> arcsSortants(City a) {

@@ -1,23 +1,28 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 
+
 public class Graph {
 
   // Map id - City
   protected Map<String, City> correspondanceIdCity;
+  // Map source - dest
+  protected Map<City, Set<Road>> sourceDestRoads;
 
 
   public Graph(File _cities, File _roads) {
     correspondanceIdCity = new HashMap<>();
+    sourceDestRoads = new HashMap<>();
     Scanner scanner = null;
     try {
       scanner = new Scanner(_cities);
 
-      while(scanner.hasNextLine()){
+      while (scanner.hasNextLine()) {
         String[] arrOfString = scanner.nextLine().split(",");
         // convert text id to int
         int id = Integer.parseInt(arrOfString[0]);
@@ -27,34 +32,48 @@ public class Graph {
         double longitude = Double.parseDouble(arrOfString[2]);
         // convert String latitude to double
         double latitude = Double.parseDouble(arrOfString[3]);
-
         City city = new City(id, cityName, longitude, latitude);
+        Set<Road> set = new HashSet();
+        sourceDestRoads.put(city, set);
         correspondanceIdCity.put(arrOfString[0], city);
       }
-
       scanner.close();
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
-
-
-
-
+    try {
+      scanner = new Scanner(_roads);
+      while (scanner.hasNextLine()) {
+        String[] arrOfString = scanner.nextLine().split(",");
+        String sourceCityId = arrOfString[0];
+        City source = correspondanceIdCity.get(sourceCityId);
+        String destinationCityId = arrOfString[1];
+        City dest = correspondanceIdCity.get(destinationCityId);
+        double dist = Util.distance(source.getLatitude(), source.getLongitude(), dest.getLatitude(), dest.getLongitude());
+        Road road = new Road(source, dest, dist);
+        Set<Road> srcSet = sourceDestRoads.get(source);
+        Set<Road> destSet = sourceDestRoads.get(dest);
+        srcSet.add(road);
+        destSet.add(road);
+      }
+    } catch ( FileNotFoundException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  protected  void ajouterSommet(City a){
+  protected void ajouterSommet(City a) {
     correspondanceIdCity.put(String.valueOf(a.getId()), a);
   }
 
-  protected void ajouterArc(Road f){
+  protected void ajouterArc(Road f) {
     return;
   }
 
-  public Set<Road> arcsSortants(City a){
+  public Set<Road> arcsSortants(City a) {
     return null;
   }
 
-  public boolean sontAdjacents(City a1, City a2){
+  public boolean sontAdjacents(City a1, City a2) {
     return false;
   }
 

@@ -6,6 +6,13 @@ public class City {
   private double longitude;
   private double latitude;
 
+  public City(int id, String name, double longitude, double latitude) {
+    this.id = id;
+    this.name = name;
+    this.longitude = longitude;
+    this.latitude = latitude;
+  }
+
   public int getId() {
     return id;
   }
@@ -22,4 +29,13 @@ public class City {
     return longitude;
   }
 
+  @Override
+  public String toString() {
+    return "City{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", longitude=" + longitude +
+        ", latitude=" + latitude +
+        '}';
+  }
 }

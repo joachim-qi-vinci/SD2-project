@@ -1,48 +1,61 @@
+import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Map;
+import java.util.Set;
 
 public class ListeDAdjacence extends Graph {
 
   private Map<City, Set<Road>> outputRoads;
 
-  public ListeDAdjacence(){
+  public ListeDAdjacence(File cities, File roads ) {
     super();
-    outputRoads = new HashMap<City, Set<Road>>();
-
+    outputRoads = new HashMap<>();
+    constructFromTXT(cities, roads);
   }
 
   @Override
-  protected void ajouterSommet(City c){
-    correspondanceIdCity.put(c.getId(), c);
-    outputRoads.put(c, new HashSet<>());
+  // Complexit�: o(1)
+  protected void ajouterSommet(City a) {
+    correspondanceNomVille.put(a.getName(), a);
+    outputRoads.put(a, new HashSet<>());
   }
 
   @Override
-  protected void ajouterArc(Road r){
+  // Complexit�: o(1)
+  protected void ajouterArc(Road r) {
     outputRoads.get(r.getSource()).add(r);
   }
 
   @Override
-  public Set<Road> arcsSortants(City c){
-    return outputRoads.get(c);
+  // Complexit�: o(1)
+  public Set<Road> arcsSortants(Road r) {
+    return outputRoads.get(r);
   }
 
   @Override
-  public boolean sontAdjacents(City c1, City c2){
-    for(Road r1 : outputRoads.get(c1)){
-      if(r1.getDestination().equals(c2)){
+  // Complexit�: o(m)
+  public boolean sontAdjacents(Road r1, Road r2) {
+    Set<Road> f1 = outputRoads.get(r1);
+    for (Road f : f1) {
+      if (f.getDestination().equals(r2)) {
         return true;
       }
     }
-    for(Road r2 : outputRoads.get(c2)){
-      if(r2.getDestination().equals(c1)){
+
+    Set<Road> f2 = outputRoads.get(r2);
+    for (Road f : f2) {
+      if (f.getDestination().equals(r1)) {
         return true;
       }
     }
     return false;
   }
 
-}
+  public void calculerItineraireMinimisantNombreRoutes(String berlin, String madrid) {
 
+
+
+  }
+
+}

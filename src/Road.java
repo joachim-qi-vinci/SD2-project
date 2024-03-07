@@ -1,12 +1,10 @@
 public class Road {
   private City source;
   private City desination;
-  private double distance;
 
-  public Road(City source, City desination, double distance) {
+  public Road(City source, City desination) {
     this.source = source;
     this.desination = desination;
-    this.distance = distance;
   }
 
   public City getDestination() {
@@ -17,7 +15,12 @@ public class Road {
     return source;
   }
 
-  public double getDistance() {
-    return distance;
+
+  @Override
+  public String toString() {
+    return "Road{" +
+        "source=" + source +
+        ", desination=" + desination +
+        '}';
   }
 }

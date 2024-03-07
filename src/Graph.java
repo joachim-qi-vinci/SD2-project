@@ -1,51 +1,72 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-public class Graph {
+public abstract class Graph {
 
-  protected Map<String, City> correspondanceIdCity;
+	protected Map<String, City> correspondanceNomVille ;
 
+	public void Graph(){
+		correspondanceNomVille= new HashMap<>();
+	}
 
-  public Graph(File _cities, File _roads) {
-    correspondanceIdCity = new HashMap<>();
-    Scanner scanner = null;
-    try {
-      scanner = new Scanner(_cities);
+	public void constructFromTXT(File cities, File roads){
 
-      while(scanner.hasNextLine()){
-        JO
-      }
+		HashMap<Integer, City> citiesTab = new HashMap<>();
 
-      scanner.close();
+		// insert all cities
+		try (Scanner scanner = new Scanner(cities)) {
+
+			while(scanner.hasNextLine()){
+				String[] elems = scanner.next().split(",");
+				int id = Integer.parseInt(elems[0]);
+				String cityName = elems[1];
+				double longitude = Double.parseDouble(elems[2]);
+				double latitude = Double.parseDouble(elems[3]);
+				City c = new City(id, cityName, longitude,latitude);
+				correspondanceNomVille.put(cityName, c);
+				ajouterSommet(c);
+				citiesTab.put(id, c);
+			}
     } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
+			throw new RuntimeException(e);
+		}
+
+		// insert all road
+		try (Scanner scanner = new Scanner(roads)) {
+			while(scanner.hasNextLine()){
+				String[] elems = scanner.next().split(",");
+				int idSrc = Integer.parseInt(elems[0]);
+				int idDest = Integer.parseInt(elems[1]);
+				Road r = new Road(citiesTab.get(idSrc), citiesTab.get(idDest));
+				ajouterArc(r);
+			}
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public City getAirport(String nom) {
+		return correspondanceNomVille.get(nom);
+	}
+
+	protected abstract void ajouterSommet(City c);
+
+	protected abstract void ajouterArc(Road r);
+	
+	public abstract Set<Road> arcsSortants(Road r);
+
+	public abstract boolean sontAdjacents(Road r1, Road r2);
 
 
-
-
-  }
-
-  protected abstract void ajouterSommet(City a);
-
-  protected abstract void ajouterArc(Road f);
-
-  public abstract Set<Road> arcsSortants(City a);
-
-  public abstract boolean sontAdjacents(City a1, City a2);
-
-  public void calculerItineraireMinimisantNombreRoutes(String source, String dest) {
-
-
-  }
-
-  public void calculerItineraireMinimisantKm(String source, String dest) {
-  }
-
-  // pile dans la methode
 
 }

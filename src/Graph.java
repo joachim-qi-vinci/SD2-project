@@ -68,5 +68,7 @@ public abstract class Graph {
 	public abstract boolean sontAdjacents(Road r1, Road r2);
 
 
+	public abstract void calculerItineraireMinimisantKm(String city1, String city2);
 
+	public abstract void calculerItineraireMinimisantNombreRoutes(String city1, String city2);
 }

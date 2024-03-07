@@ -52,9 +52,13 @@ public class ListeDAdjacence extends Graph {
     return false;
   }
 
+  @Override
+  public void calculerItineraireMinimisantKm(String city1, String city2) {
+
+  }
+
+  @Override
   public void calculerItineraireMinimisantNombreRoutes(String berlin, String madrid) {
-
-
 
   }
 

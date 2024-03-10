@@ -2,9 +2,12 @@ public class Road {
   private City source;
   private City desination;
 
-  public Road(City source, City desination) {
-    this.source = source;
-    this.desination = desination;
+  private double distance;
+
+  public Road(City s, City d) {
+    this.source = s;
+    this.desination = d;
+    this.distance = Util.distance(s.getLatitude(), s.getLongitude(), d.getLatitude(), d.getLongitude());
   }
 
   public City getDestination() {
@@ -16,11 +19,16 @@ public class Road {
   }
 
 
+  public double getDistance() {
+    return distance;
+  }
+
   @Override
   public String toString() {
     return "Road{" +
         "source=" + source +
         ", desination=" + desination +
+        ", distance=" + distance +
         '}';
   }
 }

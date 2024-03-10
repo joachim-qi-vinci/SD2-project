@@ -15,11 +15,8 @@ public abstract class Graph {
 
 	protected Map<String, City> correspondanceNomVille ;
 
-	public void Graph(){
+	public void Graph(File cities, File roads){
 		correspondanceNomVille= new HashMap<>();
-	}
-
-	public void constructFromTXT(File cities, File roads){
 
 		HashMap<Integer, City> citiesTab = new HashMap<>();
 

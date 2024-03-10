@@ -11,7 +11,6 @@ public class ListeDAdjacence extends Graph {
   public ListeDAdjacence(File cities, File roads ) {
     super();
     outputRoads = new HashMap<>();
-    constructFromTXT(cities, roads);
   }
 
   @Override

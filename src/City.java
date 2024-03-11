@@ -2,15 +2,14 @@ public class City {
 
   private int id;
   private String name;
-
-  private double longitude;
   private double latitude;
+  private double longitude;
 
-  public City(int id, String name, double longitude, double latitude) {
+  public City(int id, String name, double latitude, double longitude) {
     this.id = id;
     this.name = name;
-    this.longitude = longitude;
     this.latitude = latitude;
+    this.longitude = longitude;
   }
 
   public int getId() {
@@ -34,8 +33,11 @@ public class City {
     return "City{" +
         "id=" + id +
         ", name='" + name + '\'' +
-        ", longitude=" + longitude +
         ", latitude=" + latitude +
+        ", longitude=" + longitude +
         '}';
   }
+
+
+
 }

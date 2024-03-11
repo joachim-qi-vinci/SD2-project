@@ -1,7 +1,6 @@
 public class Road {
   private City source;
   private City desination;
-
   private double distance;
 
   public Road(City s, City d) {
@@ -17,7 +16,6 @@ public class Road {
   public City getSource() {
     return source;
   }
-
 
   public double getDistance() {
     return distance;

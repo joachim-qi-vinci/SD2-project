@@ -1,9 +1,9 @@
 public class City {
 
-  private int id;
-  private String name;
-  private double latitude;
-  private double longitude;
+  private final int id;
+  private final String name;
+  private final double latitude;
+  private final double longitude;
 
   public City(int id, String name, double latitude, double longitude) {
     this.id = id;
@@ -37,7 +37,6 @@ public class City {
         ", longitude=" + longitude +
         '}';
   }
-
 
 
 }

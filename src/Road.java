@@ -1,12 +1,14 @@
 public class Road {
-  private City source;
-  private City desination;
-  private double distance;
+
+  private final City source;
+  private final City desination;
+  private final double distance;
 
   public Road(City s, City d) {
     this.source = s;
     this.desination = d;
-    this.distance = Util.distance(s.getLatitude(), s.getLongitude(), d.getLatitude(), d.getLongitude());
+    this.distance = Util.distance(s.getLatitude(), s.getLongitude(), d.getLatitude(),
+        d.getLongitude());
   }
 
   public City getDestination() {

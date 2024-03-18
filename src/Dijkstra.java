@@ -57,7 +57,7 @@ public class Dijkstra extends arcSortants {
             // else if the distance is less than the current distance
           } else if (cityDistance.get(r.getDestination()) > distance + cityDistance.get(nextCity)) {
             // Update the distance and the previous road
-            cityDistance.put(r.getDestination(), cityDistance.get(nextCity));
+            cityDistance.put(r.getDestination(), distance + cityDistance.get(nextCity));
             previousRoad.put(r.getDestination(), r);
           }
 

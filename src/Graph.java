@@ -19,32 +19,31 @@ public abstract class Graph {
 
     // insert all cities
     try (Scanner scanner = new Scanner(cities)) {
-
-      while (scanner.hasNextLine()) {
-
-        String[] elems = scanner.nextLine().split(",");
-        int id = Integer.parseInt(elems[0]);
-        String cityName = elems[1];
-        double latitude = Double.parseDouble(elems[2]);
-        double longitude = Double.parseDouble(elems[3]);
-        City c = new City(id, cityName, latitude, longitude);
-        correspondanceNomVille.put(cityName, c);
-        addCity(c);
-        citiesTab.put(id, c);
-      }
+        do {
+          String[] elems = scanner.nextLine().split(",");
+          int id = Integer.parseInt(elems[0]);
+          String cityName = elems[1];
+          double latitude = Double.parseDouble(elems[2]);
+          double longitude = Double.parseDouble(elems[3]);
+          City c = new City(id, cityName, latitude, longitude);
+          addCity(c);
+          citiesTab.put(id, c);
+        } while (scanner.hasNextLine());
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
 
     // insert all road
     try (Scanner scanner = new Scanner(roads)) {
-      while (scanner.hasNextLine()) {
-        String[] elems = scanner.nextLine().split(",");
-        int idSrc = Integer.parseInt(elems[0]);
-        int idDest = Integer.parseInt(elems[1]);
-        Road r = new Road(citiesTab.get(idSrc), citiesTab.get(idDest));
-        addRoad(r);
-      }
+        do {
+          String[] elems = scanner.nextLine().split(",");
+          int idSrc = Integer.parseInt(elems[0]);
+          int idDest = Integer.parseInt(elems[1]);
+          Road r = new Road(citiesTab.get(idSrc), citiesTab.get(idDest));
+          Road rBack = new Road(citiesTab.get(idDest), citiesTab.get(idSrc));
+          addRoad(r);
+          addRoad(rBack);
+        } while (scanner.hasNextLine());
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
@@ -62,7 +61,4 @@ public abstract class Graph {
 
   public abstract boolean areAdjoining(City c1, City c2);
 
-  public abstract void calculerItineraireMinimisantKm(String city1, String city2);
-
-  public abstract void calculerItineraireMinimisantNombreRoutes(String city1, String city2);
 }

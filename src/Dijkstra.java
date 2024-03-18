@@ -1,8 +1,10 @@
 import java.io.File;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 public class Dijkstra extends arcSortants {
 
@@ -16,77 +18,87 @@ public class Dijkstra extends arcSortants {
     City c1 = correspondanceNomVille.get(city1);
     City c2 = correspondanceNomVille.get(city2);
 
-    // List to store the label (= shortest road from the source)
-    List<Road> finalLabel = new ArrayList<Road>(correspondanceNomVille.size()-1);
-    // List to store the temporary label
-    List<Road> temporaryLabel = new ArrayList<Road>(correspondanceNomVille.size()-1);
+    // Set to store Cities to visit
+    Set<City> toVisit = new HashSet<>();
 
-    System.out.println(finalLabel);
+    // Set to store visited Cities
+    Set<City> visited = new HashSet<>();
+
+    // Map to store distance from the city to c1
+    Map<City, Double> cityDistance = new HashMap<>();
+
     // Map to store the previous road for each city
-    HashMap<City, Road> previousRoad = new HashMap<>();
+    Map<City, Road> previousRoad = new HashMap<>();
 
-    temporaryLabel.add(c1.getId() -1, null);
-    finalLabel.add(c1.getId() -1, null);
+    City nextCity = c1;
+    cityDistance.put(c1, 0.0);
+    previousRoad.put(c1, null);
 
-    // Starting at city1
-    Road smallestRoad = null;
-    for (Road r : roadsFromCity(c1)) {
-      if(smallestRoad == null || r.getDistance() < smallestRoad.getDistance()){
-        smallestRoad = r;
-      }
-      temporaryLabel.add(r.getDestination().getId() -1, r);
-    }
+    double shortestDistance;
 
-    // No roads found
-    if(smallestRoad == null){
-      System.out.println("Pas de routes à partir de la ville de départ");
-      return;
-    }
-
-    // Add city 1 to final label
-    int idCity = smallestRoad.getDestination().getId() -1;
-    finalLabel.add(idCity, smallestRoad);
-
-    // add all cities to finalLabel until city2 filled or empty
+    // While the queue is not empty and the city c2 is not visited
     do {
-      for (Road r : roadsFromCity(smallestRoad.getSource())) {
-        if(r.getDistance() < smallestRoad.getDistance()){
-          smallestRoad = r;
+
+      // For each road from the city
+      for (Road r : roadsFromCity(nextCity)) {
+
+        // If the city is not present in the map
+        if (!visited.contains(r.getDestination())) {
+
+          // get the road distance
+          double distance = r.getDistance();
+
+          // If the distance for the city is not present in the map
+          if (cityDistance.get(r.getDestination()) == null) {
+            // Add the distance and the previous road
+            cityDistance.put(r.getDestination(), distance + cityDistance.get(nextCity));
+            previousRoad.put(r.getDestination(), r);
+
+            // else if the distance is less than the current distance
+          } else if (cityDistance.get(r.getDestination()) > distance + cityDistance.get(nextCity)) {
+            // Update the distance and the previous road
+            cityDistance.put(r.getDestination(), cityDistance.get(nextCity));
+            previousRoad.put(r.getDestination(), r);
+          }
+
+          // add a city to the queue
+          toVisit.add(r.getDestination());
         }
-
-        idCity = smallestRoad.getDestination().getId() -1;
-
-        // If the city isn't in the finalLabel and smaller than the previous road
-        // TODO Vérifier la taille totale des routes, pas la taille de la route
-        if(finalLabel.get(idCity) == null && r.getDistance() < temporaryLabel.get(r.getDestination().getId() -1).getDistance()) {
-          temporaryLabel.add(r.getDestination().getId() - 1, r);
-        }
-
       }
 
-      finalLabel.add(idCity, smallestRoad);
+      // Add the city to the visited set
+      visited.add(nextCity);
+      // Remove the road from the set to visit
+      toVisit.remove(nextCity);
 
-    } while (finalLabel.get(c2.getId() - 1) != null && finalLabel.size() <= correspondanceNomVille.size());
+      // Find the closest city in the Set to visit
+      shortestDistance = Integer.MAX_VALUE;
+      for (City c : toVisit) {
+        // If the distance is less than the current shortest distance
+        double distance = cityDistance.get(c);
+        if (distance < shortestDistance) {
+          // Update the shortest distance, road and next city
+          shortestDistance = distance;
+          nextCity = c;
+        }
+      }
+    } while (!toVisit.isEmpty() && !visited.contains(c2));
 
-
-
-
-
-
-
-
+    // If the city c2 is not visited
+    if (!visited.contains(c2)) {
+      System.out.println("Aucun chemin existant");
+      throw new NoSuchElementException();
+    }
 
     // Unstack the queue to find the way
     ArrayDeque<Road> way = new ArrayDeque<>();
-    Road lastRoad = finalLabel.get(c2.getId() -1);
-    double km = 0.0;
+    Road lastRoad = previousRoad.get(c2);
+    double km = cityDistance.get(c2);
     do {
       // Add the road to the way
       way.addFirst(lastRoad);
-      // Add the distance to the total distance
-      km += lastRoad.getDistance();
       // Get the previous road
-      lastRoad = finalLabel.get(lastRoad.getSource().getId()-1);
+      lastRoad = previousRoad.get(lastRoad.getSource());
     } while (!way.getFirst().getSource().equals(c1));
 
     // Display Menu
@@ -102,18 +114,6 @@ public class Dijkstra extends arcSortants {
           currentRoad.getSource().getName() + " -> " + currentRoad.getDestination().getName() + " ("
               + currentRoad.getDistance() + " km)");
     }
-
-
-    /*
-     *
-     * Garder en mémoire les chemins les plus courts
-     *
-     * Remplir étiquette provisoir (distance) pour chaque ville
-     * Regarder moins couteux et mettre à jour
-     * Aller vers le moins couteux
-     * Refaire pour chaque ville juqu'à empty ou la ville cible
-     *
-     */
 
   }
 

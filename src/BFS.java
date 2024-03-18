@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 public class BFS extends arcSortants {
@@ -18,7 +19,7 @@ public class BFS extends arcSortants {
     // Queue to store the cities to visit with the BFS
     ArrayDeque<City> queue = new ArrayDeque<>();
     // Map to store the previous road for each city
-    HashMap<City, Road> previousRoad = new HashMap<>();
+    Map<City, Road> previousRoad = new HashMap<>();
 
     City nextCity = c1;
     previousRoad.put(c1, null);
@@ -63,7 +64,7 @@ public class BFS extends arcSortants {
     // Display Menu
     System.out.println(
         "\nTrajet de " + c1.getName() + " à " + c2.getName() + ": " + way.size() + " routes "
-            + " et " + km + " kms");
+            + " et " + km + " kms\n");
 
     // Display the way
     int size = way.size();

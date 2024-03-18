@@ -7,9 +7,9 @@ public class Main {
     File roads = new File("roads.txt");
     BFS bfs = new BFS(cities, roads);
     Dijkstra dijkstra = new Dijkstra(cities, roads);
-    System.out.println("------------- BFS -------------");
+    System.out.println("\n------------- BFS -------------");
     bfs.calculerItineraireMinimisantNombreRoutes("Berlin", "Madrid");
-    System.out.println("------------- Dijkstra -------------");
+    System.out.println("\n------------- Dijkstra -------------");
     dijkstra.calculerItineraireMinimisantKm("Berlin", "Madrid");
   }
 }

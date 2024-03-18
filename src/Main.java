@@ -12,5 +12,4 @@ public class Main {
     System.out.println("------------- Dijkstra -------------");
     dijkstra.calculerItineraireMinimisantKm("Berlin", "Madrid");
   }
-
 }

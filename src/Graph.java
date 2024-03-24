@@ -12,17 +12,33 @@ import java.util.Set;
 
 public class Graph {
 
+  // Map to store the roads from a city
   private final Map<City, Set<Road>> outputRoads;
-  //
-  private Map<String, City> correspondanceNomVille;
+  // Map to store the cities by their name
+  private final Map<String, City> correspondanceNomVille;
 
+  /**
+   * Constructor of the Graph. It initializes the maps and calls the method to create the graph from
+   * the files.
+   *
+   * @param cities the file containing the cities
+   * @param roads  the file containing the roads
+   */
   public Graph(File cities, File roads) {
     correspondanceNomVille = new HashMap<>();
     outputRoads = new HashMap<>();
-    construireTxt(cities, roads);
+    createGraphByTxt(cities, roads);
   }
 
-  public void construireTxt(File cities, File roads) {
+  /**
+   * Create the graph from the cities and roads files.
+   *
+   * @param cities the file containing the cities
+   * @param roads  the file containing the roads
+   */
+  public void createGraphByTxt(File cities, File roads) {
+
+    // Map to store the cities by their id
     HashMap<Integer, City> citiesTab = new HashMap<>();
 
     // insert all cities
@@ -57,10 +73,6 @@ public class Graph {
     }
   }
 
-  public City getAirport(String nom) {
-    return correspondanceNomVille.get(nom);
-  }
-
   public void addCity(City a) {
     correspondanceNomVille.put(a.getName(), a);
     outputRoads.put(a, new HashSet<>());
@@ -90,7 +102,7 @@ public class Graph {
     City c1 = correspondanceNomVille.get(city1);
     City c2 = correspondanceNomVille.get(city2);
 
-    // Queue to store the cities to visit with the algorithm.BFS
+    // Queue to store the cities to visit with the BFS algorithm
     ArrayDeque<City> queue = new ArrayDeque<>();
     // Map to store the previous road for each city
     Map<City, Road> previousRoad = new HashMap<>();
@@ -106,48 +118,39 @@ public class Graph {
         if (!previousRoad.containsKey(r.getDestination())) {
           // add a city to the queue
           queue.add(r.getDestination());
-          // Add the city and its road to the map
+          // Add the city and its previous road to the map
           previousRoad.put(r.getDestination(), r);
         }
       }
 
+      // If the queue is not empty get the next city to visit
       if (!queue.isEmpty()) {
         nextCity = queue.removeFirst();
       }
 
     } while (!queue.isEmpty() && !nextCity.equals(c2));
 
+    // If the city c2 is not visited
     if (!nextCity.equals(c2)) {
-      System.out.println("Aucun chemin existant");
-      throw new NoSuchElementException();
+      throw new NoSuchElementException(
+          "Aucun chemin existant entre " + c1.getName() + " et " + c2.getName());
     }
 
-    // Unstack the queue to find the way
+    // Browse the map to find the way and the total distance
     ArrayDeque<Road> way = new ArrayDeque<>();
     Road lastRoad = previousRoad.get(c2);
     double km = 0.0;
+    // While the road source is not the source city, add the road to the way and add the road distance to the total distance
     do {
-      // Add the road to the way
       way.addFirst(lastRoad);
-      // Add the distance to the total distance
       km += lastRoad.getDistance();
-      // Get the previous road
       lastRoad = previousRoad.get(lastRoad.getSource());
     } while (!way.getFirst().getSource().equals(c1));
 
-    // Display Menu
-    System.out.println(
-        "\nTrajet de " + c1.getName() + " à " + c2.getName() + ": " + way.size() + " routes "
-            + " et " + km + " kms\n");
-
-    // Display the way
+    // Get the number of roads
     int size = way.size();
-    for (int i = 0; i < size; i++) {
-      Road currentRoad = way.removeFirst();
-      System.out.println(
-          currentRoad.getSource().getName() + " -> " + currentRoad.getDestination().getName() + " ("
-              + currentRoad.getDistance() + " km)");
-    }
+    // Display the way and the total distance
+    printDistanceAndWay(c1, c2, size, km, way);
 
   }
 
@@ -225,35 +228,51 @@ public class Graph {
 
     // If the city c2 is not visited
     if (!visited.contains(c2)) {
-      System.out.println("Aucun chemin existant");
-      throw new NoSuchElementException();
+      throw new NoSuchElementException(
+          "Aucun chemin existant entre " + c1.getName() + " et " + c2.getName());
     }
 
-    // Unstack the queue to find the way
+    // Browse the map to find the way
     ArrayDeque<Road> way = new ArrayDeque<>();
     Road lastRoad = previousRoad.get(c2);
-    double km = cityDistance.get(c2);
+    // While the road source is not the source city, add the road to the way
     do {
-      // Add the road to the way
       way.addFirst(lastRoad);
-      // Get the previous road
       lastRoad = previousRoad.get(lastRoad.getSource());
     } while (!way.getFirst().getSource().equals(c1));
 
+    // Get the total distance and the number of roads
+    double km = cityDistance.get(c2);
+    int size = way.size();
+    // Display the way and the total distance
+    printDistanceAndWay(c1, c2, size, km, way);
+
+  }
+
+  /**
+   * Display the way and the total distance between two cities
+   *
+   * @param c1   the source city
+   * @param c2   the destination city
+   * @param size the number of roads
+   * @param km   the total distance
+   * @param way  the way between the two cities
+   */
+  private static void printDistanceAndWay(City c1, City c2, int size, double km,
+      ArrayDeque<Road> way) {
+
     // Display Menu
     System.out.println(
-        "\nTrajet de " + c1.getName() + " à " + c2.getName() + ": " + way.size() + " routes "
-            + " et " + km + " kms");
+        "\nTrajet de " + c1.getName() + " à " + c2.getName() + ": " + size + " routes et "
+            + km + " kms");
 
     // Display the way
-    int size = way.size();
     for (int i = 0; i < size; i++) {
       Road currentRoad = way.removeFirst();
       System.out.println(
-          currentRoad.getSource().getName() + " -> " + currentRoad.getDestination().getName() + " ("
-              + currentRoad.getDistance() + " km)");
+          currentRoad.getSource().getName() + " -> " + currentRoad.getDestination().getName()
+              + " (" + String.format("%.2f", currentRoad.getDistance()) + " km)");
     }
-
   }
 
 }

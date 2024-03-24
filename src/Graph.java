@@ -86,16 +86,6 @@ public class Graph {
     return outputRoads.get(c);
   }
 
-  public boolean areAdjoining(City c1, City c2) {
-    Set<Road> roads = outputRoads.get(c1);
-    for (Road r : roads) {
-      if (r.getDestination().equals(c2)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   public void calculerItineraireMinimisantNombreRoutes(String city1, String city2) {
 
     // Get the cities from the graph

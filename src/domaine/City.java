@@ -1,3 +1,5 @@
+package domaine;
+
 public class City {
 
   private final int id;
@@ -30,7 +32,7 @@ public class City {
 
   @Override
   public String toString() {
-    return "City{" +
+    return "domaine.City{" +
         "id=" + id +
         ", name='" + name + '\'' +
         ", latitude=" + latitude +

@@ -1,3 +1,7 @@
+package graph;
+
+import domaine.City;
+import domaine.Road;
 import java.io.File;
 import java.util.HashMap;
 import java.util.HashSet;

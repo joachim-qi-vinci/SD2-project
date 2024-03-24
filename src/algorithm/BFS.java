@@ -1,3 +1,8 @@
+package algorithm;
+
+import domaine.City;
+import domaine.Road;
+import graph.arcSortants;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.HashMap;
@@ -16,7 +21,7 @@ public class BFS extends arcSortants {
     City c1 = correspondanceNomVille.get(city1);
     City c2 = correspondanceNomVille.get(city2);
 
-    // Queue to store the cities to visit with the BFS
+    // Queue to store the cities to visit with the algorithm.BFS
     ArrayDeque<City> queue = new ArrayDeque<>();
     // Map to store the previous road for each city
     Map<City, Road> previousRoad = new HashMap<>();

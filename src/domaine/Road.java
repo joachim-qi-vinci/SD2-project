@@ -1,3 +1,7 @@
+package domaine;
+
+import domaine.utils.Util;
+
 public class Road {
 
   private final City source;
@@ -25,7 +29,7 @@ public class Road {
 
   @Override
   public String toString() {
-    return "Road{" +
+    return "domaine.Road{" +
         "source=" + source +
         ", desination=" + desination +
         ", distance=" + distance +

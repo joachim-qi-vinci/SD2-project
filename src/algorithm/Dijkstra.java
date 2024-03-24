@@ -1,3 +1,8 @@
+package algorithm;
+
+import domaine.City;
+import domaine.Road;
+import graph.arcSortants;
 import java.io.File;
 import java.util.ArrayDeque;
 import java.util.HashMap;

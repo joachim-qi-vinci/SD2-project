@@ -106,15 +106,15 @@ public class Graph {
    * Calculate the way between two cities minimizing the number of roads. The algorithm used is BFS.
    * The way is displayed with the number of roads and the total distance.
    *
-   * @param city1 the source city
-   * @param city2 the destination city
+   * @param source the source city
+   * @param destination the destination city
    * @throws NoSuchElementException if there is no way between the two cities
    */
-  public void calculerItineraireMinimisantNombreRoutes(String city1, String city2) {
+  public void calculerItineraireMinimisantNombreRoutes(String source, String destination) {
 
     // Get the cities from the graph
-    City c1 = correspondanceNomVille.get(city1);
-    City c2 = correspondanceNomVille.get(city2);
+    City c1 = correspondanceNomVille.get(source);
+    City c2 = correspondanceNomVille.get(destination);
 
     // Queue to store the cities to visit with the BFS algorithm
     ArrayDeque<City> queue = new ArrayDeque<>();
@@ -146,7 +146,7 @@ public class Graph {
 
     } while (!queue.isEmpty() && !nextCity.equals(c2));
 
-    // If the city c2 is not visited
+    // If the destination is not visited
     if (!nextCity.equals(c2)) {
       throw new NoSuchElementException(
           "Aucun chemin existant entre " + c1.getName() + " et " + c2.getName());
@@ -174,29 +174,30 @@ public class Graph {
    * Calculate the way between two cities minimizing the distance. The algorithm used is Dijkstra.
    * The way is displayed with the number of roads and the total distance.
    *
-   * @param city1 the source city
-   * @param city2 the destination city
+   * @param source the source city
+   * @param destination the destination city
    * @throws NoSuchElementException if there is no way between the two cities
    */
-  public void calculerItineraireMinimisantKm(String city1, String city2) {
+  public void calculerItineraireMinimisantKm(String source, String destination) {
 
     // Get the cities from the graph
-    City c1 = correspondanceNomVille.get(city1);
-    City c2 = correspondanceNomVille.get(city2);
+    City c1 = correspondanceNomVille.get(source);
+    City c2 = correspondanceNomVille.get(destination);
 
-    // Set to store Cities to visit
+    // Set to store Cities to visit (= presence in Dijkstra's temporary table)
     Set<City> toVisit = new HashSet<>();
 
-    // Set to store visited Cities
+    // Set to store visited Cities (= presence in Dijkstra's permanent table)
     Set<City> visited = new HashSet<>();
 
-    // Map to store distance from the city to c1
+    // Map to store distance from the current city to the source (= values of Dijkstra's temporary and permanent table)
     Map<City, Double> cityDistance = new HashMap<>();
 
     // Map to store the previous road for each city
     Map<City, Road> previousRoad = new HashMap<>();
 
-    // Variable to store the shortest distance
+    // Variables to store distances values
+    double distance;
     double shortestDistance;
 
     // Start with the source city
@@ -208,49 +209,46 @@ public class Graph {
     do {
       // For each road from the city
       for (Road r : roadsFromCity(nextCity)) {
-        // If the city is not present in the map
+        // If the city is not present in the visited set
         if (!visited.contains(r.getDestination())) {
 
           // get the road distance
-          double distance = r.getDistance();
+          distance = r.getDistance();
 
-          // If the distance for the city is not present in the map
-          if (cityDistance.get(r.getDestination()) == null) {
-            // Add the distance and the previous road
-            cityDistance.put(r.getDestination(), distance + cityDistance.get(nextCity));
-            previousRoad.put(r.getDestination(), r);
-
-            // else if the distance is less than the current distance
-          } else if (cityDistance.get(r.getDestination()) > distance + cityDistance.get(nextCity)) {
-            // Update the distance and the previous road
+          // If the distance for the current city is not present in the map
+          // or if the distance is less than the current city distance from the source
+          if ((cityDistance.get(r.getDestination()) == null)
+              || (cityDistance.get(r.getDestination()) > distance + cityDistance.get(nextCity))) {
+            // Add or Update the distance and the previous road
             cityDistance.put(r.getDestination(), distance + cityDistance.get(nextCity));
             previousRoad.put(r.getDestination(), r);
           }
 
-          // add a city to the queue
+          // add a city to the set to visit
           toVisit.add(r.getDestination());
         }
       }
 
       // Add the city to the visited set
       visited.add(nextCity);
-      // Remove the road from the set to visit
+      // Remove the city from the set to visit
       toVisit.remove(nextCity);
 
-      // Find the closest city in the Set to visit
+      // Find the closest city from the source in the set to visit
       shortestDistance = Integer.MAX_VALUE;
       for (City c : toVisit) {
         // If the distance is less than the current shortest distance
-        double distance = cityDistance.get(c);
+        distance = cityDistance.get(c);
         if (distance < shortestDistance) {
-          // Update the shortest distance, road and next city
+          // Update the shortest distance and the next city to visit
           shortestDistance = distance;
           nextCity = c;
         }
       }
+
     } while (!toVisit.isEmpty() && !visited.contains(c2));
 
-    // If the city c2 is not visited
+    // If the destination is not visited
     if (!visited.contains(c2)) {
       throw new NoSuchElementException(
           "Aucun chemin existant entre " + c1.getName() + " et " + c2.getName());

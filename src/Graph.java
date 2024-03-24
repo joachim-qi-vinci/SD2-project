@@ -41,7 +41,7 @@ public class Graph {
     // Map to store the cities by their id
     HashMap<Integer, City> citiesTab = new HashMap<>();
 
-    // insert all cities
+    // Insert all cities
     try (Scanner scanner = new Scanner(cities)) {
       do {
         String[] elems = scanner.nextLine().split(",");
@@ -57,35 +57,59 @@ public class Graph {
       throw new RuntimeException(e);
     }
 
-    // insert all road
+    // Insert all roads
     try (Scanner scanner = new Scanner(roads)) {
       do {
         String[] elems = scanner.nextLine().split(",");
         int idSrc = Integer.parseInt(elems[0]);
         int idDest = Integer.parseInt(elems[1]);
         Road r = new Road(citiesTab.get(idSrc), citiesTab.get(idDest));
-        Road rBack = new Road(citiesTab.get(idDest), citiesTab.get(idSrc));
         addRoad(r);
-        addRoad(rBack);
+        r = new Road(citiesTab.get(idDest), citiesTab.get(idSrc));
+        addRoad(r);
       } while (scanner.hasNextLine());
     } catch (FileNotFoundException e) {
       throw new RuntimeException(e);
     }
   }
 
+  /**
+   * Add a city to the graph.
+   *
+   * @param a the city to add
+   */
   public void addCity(City a) {
     correspondanceNomVille.put(a.getName(), a);
     outputRoads.put(a, new HashSet<>());
   }
 
+  /**
+   * Add a road to the graph.
+   *
+   * @param r the road to add
+   */
   protected void addRoad(Road r) {
     outputRoads.get(r.getSource()).add(r);
   }
 
+  /**
+   * Get all roads from a city.
+   *
+   * @param c the city
+   * @return the roads from the city
+   */
   public Set<Road> roadsFromCity(City c) {
     return outputRoads.get(c);
   }
 
+  /**
+   * Calculate the way between two cities minimizing the number of roads. The algorithm used is BFS.
+   * The way is displayed with the number of roads and the total distance.
+   *
+   * @param city1 the source city
+   * @param city2 the destination city
+   * @throws NoSuchElementException if there is no way between the two cities
+   */
   public void calculerItineraireMinimisantNombreRoutes(String city1, String city2) {
 
     // Get the cities from the graph
@@ -94,9 +118,11 @@ public class Graph {
 
     // Queue to store the cities to visit with the BFS algorithm
     ArrayDeque<City> queue = new ArrayDeque<>();
+
     // Map to store the previous road for each city
     Map<City, Road> previousRoad = new HashMap<>();
 
+    // Start with the source city
     City nextCity = c1;
     previousRoad.put(c1, null);
 
@@ -126,7 +152,7 @@ public class Graph {
           "Aucun chemin existant entre " + c1.getName() + " et " + c2.getName());
     }
 
-    // Browse the map to find the way and the total distance
+    // Go through the map backwards to find the way and the total distance
     ArrayDeque<Road> way = new ArrayDeque<>();
     Road lastRoad = previousRoad.get(c2);
     double km = 0.0;
@@ -144,6 +170,14 @@ public class Graph {
 
   }
 
+  /**
+   * Calculate the way between two cities minimizing the distance. The algorithm used is Dijkstra.
+   * The way is displayed with the number of roads and the total distance.
+   *
+   * @param city1 the source city
+   * @param city2 the destination city
+   * @throws NoSuchElementException if there is no way between the two cities
+   */
   public void calculerItineraireMinimisantKm(String city1, String city2) {
 
     // Get the cities from the graph
@@ -162,18 +196,18 @@ public class Graph {
     // Map to store the previous road for each city
     Map<City, Road> previousRoad = new HashMap<>();
 
+    // Variable to store the shortest distance
+    double shortestDistance;
+
+    // Start with the source city
     City nextCity = c1;
     cityDistance.put(c1, 0.0);
     previousRoad.put(c1, null);
 
-    double shortestDistance;
-
-    // While the queue is not empty and the city c2 is not visited
+    // While the queue is not empty and the city destination is not visited
     do {
-
       // For each road from the city
       for (Road r : roadsFromCity(nextCity)) {
-
         // If the city is not present in the map
         if (!visited.contains(r.getDestination())) {
 
@@ -222,7 +256,7 @@ public class Graph {
           "Aucun chemin existant entre " + c1.getName() + " et " + c2.getName());
     }
 
-    // Browse the map to find the way
+    // Go through the map backwards to find the way
     ArrayDeque<Road> way = new ArrayDeque<>();
     Road lastRoad = previousRoad.get(c2);
     // While the road source is not the source city, add the road to the way
@@ -253,15 +287,15 @@ public class Graph {
 
     // Display Menu
     System.out.println(
-        "\nTrajet de " + c1.getName() + " à " + c2.getName() + ": " + size + " routes et "
-            + km + " kms");
+        "\nTrajet de " + c1.getName() + " à " + c2.getName() + ": " + size + " routes et " + km
+            + " kms");
 
     // Display the way
     for (int i = 0; i < size; i++) {
       Road currentRoad = way.removeFirst();
       System.out.println(
-          currentRoad.getSource().getName() + " -> " + currentRoad.getDestination().getName()
-              + " (" + String.format("%.2f", currentRoad.getDistance()) + " km)");
+          currentRoad.getSource().getName() + " -> " + currentRoad.getDestination().getName() + " ("
+              + String.format("%.2f", currentRoad.getDistance()) + " km)");
     }
   }
 

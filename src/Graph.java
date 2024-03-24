@@ -106,7 +106,7 @@ public class Graph {
    * Calculate the way between two cities minimizing the number of roads. The algorithm used is BFS.
    * The way is displayed with the number of roads and the total distance.
    *
-   * @param source the source city
+   * @param source      the source city
    * @param destination the destination city
    * @throws NoSuchElementException if there is no way between the two cities
    */
@@ -174,7 +174,7 @@ public class Graph {
    * Calculate the way between two cities minimizing the distance. The algorithm used is Dijkstra.
    * The way is displayed with the number of roads and the total distance.
    *
-   * @param source the source city
+   * @param source      the source city
    * @param destination the destination city
    * @throws NoSuchElementException if there is no way between the two cities
    */
